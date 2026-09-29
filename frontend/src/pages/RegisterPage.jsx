@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Coffee, Mail, Lock, User, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const RegisterPage = () => {
-  const { register } = useAuth();
+  const { register, user } = useAuth();
   const navigate = useNavigate();
 
   const [fullName, setFullName] = useState('');
@@ -13,6 +13,12 @@ export const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (user && !success) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate, success]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,8 +34,8 @@ export const RegisterPage = () => {
       await register(email, password, fullName);
       setSuccess(true);
       setTimeout(() => {
-        navigate('/login');
-      }, 2000);
+        navigate('/', { replace: true });
+      }, 1200);
     } catch (err) {
       setError(err.message || 'Registration failed.');
     } finally {

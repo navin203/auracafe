@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Coffee, Mail, Lock, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const LoginPage = () => {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -14,6 +14,12 @@ export const LoginPage = () => {
   const [error, setError] = useState(null);
 
   const from = location.state?.from?.pathname || '/';
+
+  useEffect(() => {
+    if (user) {
+      navigate(from, { replace: true });
+    }
+  }, [user, navigate, from]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
